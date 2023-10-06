@@ -12,7 +12,7 @@
 # use arg ssh,package
 
 
-name: Build lean+package,ljx,2023.09.24
+name: Build lean+package,ljx,2023.10.06
 
 on:
   repository_dispatch:
@@ -54,7 +54,7 @@ on:
         default: 'true'
 
 env:
-  REPO_URL: https://github.com/coolsnowwolf/lede
+  REPO_URL: https://github.com/immortalwrt/immortalwrt.git
   REPO_BRANCH: master
   FEEDS_CONF: feeds.conf.default
   CONFIG_FILE: .config
