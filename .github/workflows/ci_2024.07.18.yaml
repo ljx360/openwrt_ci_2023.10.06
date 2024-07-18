@@ -19,10 +19,6 @@ on:
   workflow_dispatch:
     inputs:
 
-      config_desc:
-        description: 'input config desc'
-        required: false
-        default: 'false'
 
       config_openwrt_url:
         description: 'input_openwrt_url'
@@ -441,13 +437,16 @@ jobs:
         echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
 
-    - name: ljx-df,check space usage
+    - name: ljx-df
       working-directory: /workdir
       run: |
         echo -e ""
         echo -e "df $PWD"
         df -hT $PWD
 
+    - name: Check space usage
+      if: (!cancelled())
+      run: df -hT
 
     - name: Upload bin directory
       uses: actions/upload-artifact@main
