@@ -165,6 +165,23 @@ jobs:
         #sudo chown $USER:$GROUPS /workdir
         
         
+
+
+    - name: set grub title
+      id: set_grub_title
+      if: (github.event.inputs.grub_title != 'false' && github.event.inputs.grub_title != '')
+      run: |
+        echo ""
+        echo "current grub title:${{github.event.inputs.grub_title}}"
+        GRUB_TITLE=${{github.event.inputs.grub_title}}
+        echo "LJX_GRUB_TITLE2=${{github.event.inputs.grub_title}}" >> $GITHUB_ENV
+        echo "LJX_GRUB_TITLE3=${GRUB_TITLE}" >> $GITHUB_ENV
+        echo ""
+        echo "debug"
+        echo "${ env.LJX_GRUB_TITLE2 }"
+        echo "${ env.LJX_GRUB_TITLE3 }"
+
+
     - name: df-2
       working-directory: /workdir
       run: |
@@ -333,22 +350,6 @@ jobs:
         cd $GITHUB_WORKSPACE
         #[ ! -e ${DIY_CONFIG_FILE_FULL_PATH} ] && [ -e ${{github.event.inputs.config_path}} ] && echo "cp file to ${DIY_CONFIG_FILE_FULL_PATH}";cat ${{github.event.inputs.config_path}} >> ${DIY_CONFIG_FILE_FULL_PATH}
         [ -e ${{github.event.inputs.config_path}} ] && echo "cat file [${{github.event.inputs.config_path}}] to [${DIY_CONFIG_FILE_FULL_PATH}]";cat ${{github.event.inputs.config_path}} >> ${DIY_CONFIG_FILE_FULL_PATH}
-
-
-
-    - name: set grub title
-      id: set grub title
-      if: (github.event.inputs.grub_title != 'false' && github.event.inputs.grub_title != '')
-      run: |
-        echo ""
-        echo "current grub title:${{github.event.inputs.grub_title}}"
-        GRUB_TITLE=${{github.event.inputs.grub_title}}
-        echo "LJX_GRUB_TITLE2=${{github.event.inputs.grub_title}}" >> $GITHUB_ENV
-        echo "LJX_GRUB_TITLE3=${GRUB_TITLE}" >> $GITHUB_ENV
-        echo ""
-        echo "debug"
-        echo "${ env.LJX_GRUB_TITLE2 }"
-        echo "${ env.LJX_GRUB_TITLE3 }"
 
 
 
