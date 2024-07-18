@@ -441,16 +441,13 @@ jobs:
         echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
 
-    - name: ljx-df
+    - name: ljx-df,check space usage
       working-directory: /workdir
       run: |
         echo -e ""
         echo -e "df $PWD"
         df -hT $PWD
 
-    - name: Check space usage
-      if: (!cancelled())
-      run: df -hT
 
     - name: Upload bin directory
       uses: actions/upload-artifact@main
