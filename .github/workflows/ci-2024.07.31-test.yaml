@@ -57,16 +57,6 @@ on:
         default: 'false'
 
 
-      config_ext_url:
-        description: 'input .config url,not merge'
-        required: false
-        default: 'false'
-
-      config_ext_path:
-        description: 'input .config path,not merge'
-        required: false
-        default: 'false'
-
       config_add_package:
         description: 'is add package,run ljx_package.sh'
         required: false
@@ -211,10 +201,10 @@ jobs:
         
     - name: init timezone,workdir
       run: |
-        #sudo timedatectl set-timezone "$TZ"
-        #sudo mkdir -p /workdir
-        #sudo chown $USER:$GROUPS /workdir
-        
+        sudo timedatectl set-timezone "$TZ"
+        sudo mkdir -p /workdir
+        sudo chown $USER:$GROUPS /workdir
+        sudo chmod -R 777 /workdir
         
         
     - name: df_ljx
@@ -254,7 +244,8 @@ jobs:
         [ -d /workdir/openwrt ] && rm -rf /workdir/openwrt
         
         echo ""
-        echo "clone $REPO_URL"
+        echo "clone url:[$REPO_URL]"
+        echo "brahch:[$REPO_BRANCH]"
         git clone $REPO_URL -b $REPO_BRANCH /workdir/openwrt
         #ljx
         
@@ -306,6 +297,7 @@ jobs:
       if: (github.event.inputs.config_add_package != '' && github.event.inputs.config_add_package  != 'false')
       working-directory: /workdir
       run: |
+        echo ""
         echo "load more package"
     
         #sed -i '$a src-git kenzo https://github.com/kenzok8/openwrt-packages' feeds.conf.default
