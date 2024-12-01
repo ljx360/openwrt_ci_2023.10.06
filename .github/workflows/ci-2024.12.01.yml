@@ -106,7 +106,7 @@ jobs:
     #runs-on: debian-latest
     
     #runs-on: ubuntu-22.04
-    #runs-on: ubuntu-20.04
+    #runs-on: ubuntu-24.04
     runs-on: ubuntu-latest
 
     steps:
@@ -125,6 +125,7 @@ jobs:
       run: |
         sudo timedatectl set-timezone "$TZ"
         sudo mkdir -p /workdir/ljx
+        sudo mkdir -p /workdir/openwrt
         sudo chown -R $USER:$GROUPS /workdir
 
 
@@ -161,6 +162,24 @@ jobs:
         echo "apt-get remove"
         sudo -E apt -yqq purge azure* docker* dotnet* firefox* ghc* google* llvm* mongodb* mysql* openjdk* php* powershell* snap* zulu*
 
+    - name: apt-get,clean
+      run: |
+        echo ""
+        echo "apt-get autoremove"
+        sudo -E apt -yqq autoremove --purge
+
+        echo ""
+        echo "apt-get clean"
+        sudo -E apt -yqq autoclean
+        sudo -E apt -yqq clean
+
+
+    - name: ljx-df
+      working-directory: /workdir
+      run: |
+        echo -e ""
+        echo -e "df $PWD"
+        df -hT $PWD
 
     - name: apt-get,update
       run: |
@@ -171,17 +190,33 @@ jobs:
         #2022.11.28
         sudo rm -rf /etc/apt/sources.list.d/* /usr/share/dotnet /usr/local/lib/android /opt/ghc
 
-        echo "apt-get update"
+        echo "apt-get update,upgrade"
         sudo -E apt -yqq update
+        sudo -E apt -yqq full-upgrade
 
 
-        
+    - name: ljx-df
+      working-directory: /workdir
+      run: |
+        echo -e ""
+        echo -e "df $PWD"
+        df -hT $PWD        
 
     - name: apt-get,install
       run: |
         echo ""
         echo "apt-get install"
         sudo -E apt -yqq  install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache cmake cpio curl device-tree-compiler fastjar flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev libssl-dev libtool lrzsz mkisofs msmtp ninja-build p7zip p7zip-full patch pkgconf python2.7 python3 python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev
+        #2024.12.01
+        #sudo -E apt -yqq  install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache clang cmake cpio curl device-tree-compiler flex gawk gettext gcc-multilib g++-multilib git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev libssl-dev libtool llvm lrzsz mkisofs msmtp ninja-build p7zip p7zip-full patch pkgconf python3 python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev
+
+    - name: ljx-df
+      working-directory: /workdir
+      run: |
+        echo -e ""
+        echo -e "df $PWD"
+        df -hT $PWD
+
 
     - name: apt-get,clean
       run: |
@@ -202,6 +237,13 @@ jobs:
       run: |
         echo ""
         echo "apt-get done"
+
+    - name: ljx-df
+      working-directory: /workdir
+      run: |
+        echo -e ""
+        echo -e "df $PWD"
+        df -hT $PWD
         
     - name: init timezone,workdir
       run: |
@@ -211,20 +253,13 @@ jobs:
         sudo chmod -R 777 /workdir
         
         
-    - name: df_ljx
+    - name: ljx-df
       working-directory: /workdir
       run: |
         echo -e ""
         echo -e "df $PWD"
         df -hT $PWD
 
-
-    - name: df_ljx
-      working-directory: /workdir
-      run: |
-        echo -e ""
-        echo -e "df $PWD"
-        df -hT $PWD
 
     - name: update openwrt git url
       if: (github.event.inputs.config_openwrt_url != '' && github.event.inputs.config_openwrt_url  != 'false')
@@ -266,7 +301,7 @@ jobs:
         echo "ls -al $GITHUB_WORKSPACE"
         ls -al /$GITHUB_WORKSPACE
 
-    - name: df-3
+    - name: ljx-df
       working-directory: /workdir
       run: |
         echo -e ""
