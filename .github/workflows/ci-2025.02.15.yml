@@ -12,7 +12,7 @@
 # use arg ssh,package
 
 
-name: Build lean+package,ljx,2025.02.15-test
+name: Build lean+package,ljx,2025.02.15-v2-test
 
 on:
   repository_dispatch:
@@ -107,7 +107,7 @@ jobs:
     
     #runs-on: ubuntu-22.04
     #runs-on: ubuntu-24.04
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - name: Checkout
@@ -130,7 +130,7 @@ jobs:
 
 
 
-    - name: df_ljx
+    - name: df_ljx,init
       working-directory: /workdir
       run: |
         echo -e ""
@@ -162,6 +162,19 @@ jobs:
         echo "apt-get remove"
         sudo -E apt -yqq purge azure* docker* dotnet* firefox* ghc* google* llvm* mongodb* mysql* openjdk* php* powershell* snap* zulu*
 
+        echo ""
+        echo "remove 2"
+        sudo -E apt -yqq purge  mysql* postgresql* apache2* nginx*
+
+
+    - name: ljx-df,apt-get,remove
+      working-directory: /workdir
+      run: |
+        echo -e ""
+        echo -e "df $PWD"
+        df -hT $PWD
+
+
     - name: apt-get,clean
       run: |
         echo ""
@@ -174,7 +187,7 @@ jobs:
         sudo -E apt -yqq clean
 
 
-    - name: ljx-df
+    - name: ljx-df,apt-get,clean
       working-directory: /workdir
       run: |
         echo -e ""
@@ -196,7 +209,7 @@ jobs:
         #sudo -E apt -yqq full-upgrade
 
 
-    - name: ljx-df
+    - name: ljx-df£¬apt-get,update
       working-directory: /workdir
       run: |
         echo -e ""
@@ -211,7 +224,7 @@ jobs:
         sudo -E apt -yqq  install ack antlr3 asciidoc autoconf automake autopoint binutils bison build-essential bzip2 ccache clang cmake cpio curl device-tree-compiler flex gawk gcc-multilib g++-multilib gettext genisoimage git gperf haveged help2man intltool libc6-dev-i386 libelf-dev libfuse-dev libglib2.0-dev libgmp3-dev libltdl-dev libmpc-dev libmpfr-dev libncurses5-dev libncursesw5-dev libpython3-dev libreadline-dev libssl-dev libtool llvm lrzsz msmtp ninja-build p7zip p7zip-full patch pkgconf python3 python3-pyelftools python3-setuptools qemu-utils rsync scons squashfs-tools subversion swig texinfo uglifyjs upx-ucl unzip vim wget xmlto xxd zlib1g-dev
 
 
-    - name: ljx-df
+    - name: ljx-df,apt-get,install
       working-directory: /workdir
       run: |
         echo -e ""
@@ -506,6 +519,13 @@ jobs:
         find dl -size -1024c -exec ls -l {} \;
         find dl -size -1024c -exec rm -f {} \;
 
+    - name: ljx-df,download_package
+      working-directory: /workdir
+      run: |
+        echo -e ""
+        echo -e "df $PWD"
+        df -hT $PWD
+
     - name: Compile the firmware
       id: compile
       run: |
@@ -530,7 +550,7 @@ jobs:
         echo "FILE_DATE=_$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
 
 
-    - name: ljx-df
+    - name: ljx-df,compile_firmware
       working-directory: /workdir
       run: |
         echo -e ""
